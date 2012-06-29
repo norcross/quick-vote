@@ -1,0 +1,61 @@
+div.qvote_display {
+	padding:7px 0;
+	overflow:hidden;
+}
+
+div.qvote_display p.qvote_block {
+	float:left;
+	width:100px;
+	font-size:16px;
+	line-height:16px;
+	margin:0;
+	padding:0;
+}
+
+div.qvote_display input.qvote {
+	margin:0 10px 0 0;
+	border: 0;
+	outline:none;
+	text-indent: -9999px;
+	width: 16px;
+	height: 16px;
+	cursor:pointer;
+	padding:0;
+}
+
+div.qvote_display input.upvote,
+div.qvote_display input.upvote:hover {
+	background: url('../img/thumb-up.png') no-repeat left bottom;
+}
+
+div.qvote_display input.downvote,
+div.qvote_display input.downvote:hover {
+	background: url('../img/thumb-down.png') no-repeat left center;
+}
+
+/* Changes for voted */
+
+div.qvote_display p.qvote_block span.just_voted {
+	font-weight:700;
+}
+
+div.qvote_display input.voted {
+	cursor:auto;
+	zoom: 1;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+
+div#vote_reply {
+	clear:both;
+	margin: 5px 0 15px;
+	background-color: #FFFFE0;
+    border-color: #E6DB55;
+}
+
+div#vote_reply p {
+	margin: 0;
+    padding: 5px 10px;
+	font-style:italic;
+	color:#111;
+}
