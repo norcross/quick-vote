@@ -3,7 +3,7 @@
 Plugin Name: Quick Vote
 Plugin URI: http://andrewnorcross.com/plugins/
 Description: Allows for simple up or down voting on a post via AJAX
-Version: 1.01
+Version: 1.02
 Author: Andrew Norcross
 Author URI: http://andrewnorcross.com
 
@@ -46,6 +46,8 @@ class QuickVote
 		add_action		( 'admin_init', 				array( $this, 'settings'	) );
 		add_action		( 'wp_enqueue_scripts',			array( $this, 'scripts'		) );
 		add_action		( 'admin_head', 				array( $this, 'css_head'	) );
+		add_filter		( 'manage_edit-post_columns',	array( $this, 'show_columns') );
+		add_action		( 'manage_posts_custom_column',	array( $this, 'votes_column'),	10, 2 );
 		add_filter		( 'the_content',				array( $this, 'post_button'	),	25);
 		add_filter		( 'the_content',				array( $this, 'page_button'	),	25);
 //		add_action		( 'do_meta_boxes',				array( $this, 'metabox'		),	10,	2 );
@@ -116,9 +118,56 @@ class QuickVote
 			margin:0 5px 0 0;
 		}
 		
+		th#upvote,
+		th#downvote {
+			width:40px;
+			text-align:center;
+		}
+		
+		span.vote_col {
+			text-align:center;
+			display:block;
+			width:auto;
+			margin:0 auto;
+		}
+		
 		</style>
 
 	<?php }
+
+	/**
+	 * Display vote totals in post column
+	 *
+	 * @return QuickVote
+	 */
+
+
+	public function show_columns( $columns ) {
+			$columns['upvote']		= __( 'Up' );
+			$columns['downvote']	= __( 'Down' );
+		
+		return $columns;
+	}
+
+	public function votes_column ( $column_name, $post_id ) {
+//		if ( 'upvote' != $column_name || 'downvote' != $column_name )
+//			return;
+		
+		global $post;	 
+		switch ( $column_name ) {
+			case 'upvote':
+				$vote	= get_post_meta($post->ID, '_qvote_up', true);
+				$voted	= (!empty($vote) && $vote > 0 ? $vote : 0);
+				echo '<span class="vote_col">'.$voted.'</span>';
+				break;
+			case 'downvote':
+				$vote	= get_post_meta($post->ID, '_qvote_down', true);
+				$voted	= (!empty($vote) && $vote > 0 ? $vote : 0);
+				echo '<span class="vote_col">'.$voted.'</span>';
+				break;
+		}			
+	}
+
 
 	/**
 	 * Display main options page structure

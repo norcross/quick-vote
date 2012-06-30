@@ -65,8 +65,8 @@ div.qvote_display p.qvote_text {
 div.vote_success {
 	clear:both;
 	margin: 5px 0 15px;
-	background-color: #ffcccc;
-    border-color: #ff6666;
+	background-color: #ccffff;
+    border: 1px solid #ccffff;
 	-moz-border-radius:5px;
 	border-radius:5px;
 }
