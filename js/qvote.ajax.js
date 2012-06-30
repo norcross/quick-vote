@@ -38,7 +38,8 @@ jQuery(document).ready(function($) {
 			action: 'qvote_count',
 			postid: postid,
 			vtype:	vtype,
-			count:	count
+			count:	count,
+			nonce:	QVoteAJAX.nonce
       	};
 
     	jQuery.post(QVoteAJAX.ajaxurl, data, function(response) {

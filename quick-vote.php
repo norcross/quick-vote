@@ -47,7 +47,7 @@ class QuickVote
 		add_action		( 'wp_enqueue_scripts',			array( $this, 'scripts'		) );
 		add_action		( 'admin_head', 				array( $this, 'css_head'	) );
 		add_filter		( 'the_content',				array( $this, 'post_button'	),	25);
-//		add_filter		( 'the_content',				array( $this, 'page_button'	),	25);
+		add_filter		( 'the_content',				array( $this, 'page_button'	),	25);
 //		add_action		( 'do_meta_boxes',				array( $this, 'metabox'		),	10,	2 );
 		add_action		( 'wp_ajax_qvote_count',		array( $this, 'qvote_count'	) );
 		add_action		( 'wp_ajax_nopriv_qvote_count',	array( $this, 'qvote_count'	) );
@@ -172,7 +172,10 @@ class QuickVote
 	public function scripts() {
 		wp_enqueue_style( 'qvote', plugins_url('/css/qvote.css', __FILE__) );
 		wp_enqueue_script( 'qvote-ajax', plugins_url('/js/qvote.ajax.js', __FILE__) , array('jquery'), null, true );
-		wp_localize_script( 'qvote-ajax', 'QVoteAJAX', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+		wp_localize_script( 'qvote-ajax', 'QVoteAJAX', array(
+			'ajaxurl'	=> admin_url( 'admin-ajax.php' ),
+			'nonce'		=> wp_create_nonce( 'qvote_nonce' )
+			) );
 	}
 
 	/**
@@ -190,10 +193,14 @@ class QuickVote
 		
 		$ret = array();
 
+		check_ajax_referer( 'qvote_nonce', 'nonce' );
+
 		if(empty($post_id) ) {
 			$ret['success'] = false;
 			$ret['error']	= 'NO_POST_ID';
 			$ret['err_msg']	= 'No Post ID could be found.';
+			echo json_encode($ret);
+			die();	
 		}
 
 
@@ -201,6 +208,8 @@ class QuickVote
 			$ret['success'] = false;
 			$ret['error']	= 'NO_VOTE_TYPE';
 			$ret['err_msg']	= 'Could not determine the vote type.';
+			echo json_encode($ret);
+			die();
 		}
 		
 		if(isset($vtype) && $vtype == 'upvote' ) {
@@ -215,8 +224,6 @@ class QuickVote
 			$ret['message']	= 'One Up Vote';
 			$ret['action']	= 'vote_up';
 			$ret['vote']	= intval($upvote);
-
-			
 		}
 
 		if(isset($vtype) && $vtype == 'downvote' ) {
@@ -245,7 +252,7 @@ class QuickVote
 	 */
 	 
 	public function post_button( $content ) {
-
+	
 		$qvote_options	= get_option('qvote_options');
 
 		if($qvote_options['post'] !== 'true' )
