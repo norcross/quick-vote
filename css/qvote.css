@@ -5,10 +5,10 @@ div.qvote_display {
 
 div.qvote_display p.qvote_block {
 	float:left;
-	width:100px;
+	width:70px;
 	font-size:16px;
 	line-height:16px;
-	margin:0;
+	margin:0 0 1em;
 	padding:0;
 }
 
@@ -23,15 +23,24 @@ div.qvote_display input.qvote {
 	padding:0;
 }
 
-div.qvote_display input.upvote,
-div.qvote_display input.upvote:hover {
-	background: url('../img/thumb-up.png') no-repeat left bottom;
+div.qvote_display input.qvote:hover {
+	background-position:0 -16px;
 }
 
-div.qvote_display input.downvote,
-div.qvote_display input.downvote:hover {
-	background: url('../img/thumb-down.png') no-repeat left center;
+div.qvote_display input.upvote {
+	background: url('../img/vote_up.png') no-repeat 0 0;
 }
+
+div.qvote_display input.downvote {
+	background: url('../img/vote_down.png') no-repeat 0 0;
+}
+
+div.qvote_display input.voted,
+div.qvote_disable input.qvote,
+div.qvote_disable input.qvote:hover {
+	background-position:0 -16px;
+	cursor:auto;
+	}
 
 /* Changes for voted */
 
@@ -39,23 +48,34 @@ div.qvote_display p.qvote_block span.just_voted {
 	font-weight:700;
 }
 
-div.qvote_display input.voted {
-	cursor:auto;
-	zoom: 1;
-	filter: alpha(opacity=50);
-	opacity: 0.5;
-}
+div.qvote_display p.qvote_show input.qvote { background-position:0 -32px;}
 
-div#vote_reply {
+	/* Display voting text */
+
+div.qvote_display p.qvote_text {
+	float:left;
+	width:auto;
+	font-size:12px;
+	line-height:16px;
+	margin:0;
+	padding:0;
+	font-style:italic;
+}	
+
+div.vote_success {
 	clear:both;
 	margin: 5px 0 15px;
-	background-color: #FFFFE0;
-    border-color: #E6DB55;
+	background-color: #ffcccc;
+    border-color: #ff6666;
+	-moz-border-radius:5px;
+	border-radius:5px;
 }
 
-div#vote_reply p {
+div.vote_success p {
 	margin: 0;
     padding: 5px 10px;
 	font-style:italic;
 	color:#111;
+	text-align:center;
 }
+
