@@ -3,7 +3,7 @@
 Plugin Name: Quick Vote
 Plugin URI: http://andrewnorcross.com/plugins/
 Description: Allows for simple up or down voting on a post via AJAX
-Version: 1.02
+Version: 1.03
 Author: Andrew Norcross
 Author URI: http://andrewnorcross.com
 
@@ -42,6 +42,7 @@ class QuickVote
 	 * @return QuickVote
 	 */
 	private function __construct() {
+		add_action		( 'init',						array( $this, 'updater'		) );
 		add_action		( 'admin_menu',					array( $this, 'admin_menu'	) );
 		add_action		( 'admin_init', 				array( $this, 'settings'	) );
 		add_action		( 'wp_enqueue_scripts',			array( $this, 'scripts'		) );
@@ -53,6 +54,40 @@ class QuickVote
 //		add_action		( 'do_meta_boxes',				array( $this, 'metabox'		),	10,	2 );
 		add_action		( 'wp_ajax_qvote_count',		array( $this, 'qvote_count'	) );
 		add_action		( 'wp_ajax_nopriv_qvote_count',	array( $this, 'qvote_count'	) );
+	}
+
+	/**
+	 * running the update function via GitHub
+	 *
+	 * @return QuickVote
+	 */
+
+	public function updater() {
+
+		include_once 'lib/updater.php';
+
+		define('WP_GITHUB_FORCE_UPDATE', true);
+
+		if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
+
+			$config = array(
+				'slug'					=> plugin_basename(__FILE__),
+				'proper_folder_name'	=> 'quick-vote',
+				'api_url'				=> 'https://api.github.com/repos/norcross/quick-vote',
+				'raw_url'				=> 'https://raw.github.com/norcross/quick-vote/master',
+				'github_url'			=> 'https://github.com/norcross/quick-vote',
+				'zip_url'				=> 'https://github.com/norcross/quick-vote/zipball/master',
+				'sslverify'				=> true,
+				'requires'				=> '3.0',
+				'tested'				=> '3.4',
+				'readme'				=> 'README.md',
+				'access_token'			=> '0631ed3cb6574d5f5061ee594d22bb57239bf744',
+			);
+
+			new WPGitHubUpdater($config);
+
+		}
+
 	}
 
 	/**
@@ -99,7 +134,7 @@ class QuickVote
 		<style type="text/css">
 
 		div#icon-qvote {
-			background:url(<?php echo plugins_url('/img/qvote_icon.png', __FILE__); ?>) no-repeat 0 0!important;
+			background:url(<?php echo plugins_url('/lib/img/qvote_icon.png', __FILE__); ?>) no-repeat 0 0!important;
 		}
 
 		div.qvote_options {
@@ -219,8 +254,8 @@ class QuickVote
 
 
 	public function scripts() {
-		wp_enqueue_style( 'qvote', plugins_url('/css/qvote.css', __FILE__) );
-		wp_enqueue_script( 'qvote-ajax', plugins_url('/js/qvote.ajax.js', __FILE__) , array('jquery'), null, true );
+		wp_enqueue_style( 'qvote', plugins_url('/lib/css/qvote.css', __FILE__) );
+		wp_enqueue_script( 'qvote-ajax', plugins_url('/lib/js/qvote.ajax.js', __FILE__) , array('jquery'), null, true );
 		wp_localize_script( 'qvote-ajax', 'QVoteAJAX', array(
 			'ajaxurl'	=> admin_url( 'admin-ajax.php' ),
 			'nonce'		=> wp_create_nonce( 'qvote_nonce' )
